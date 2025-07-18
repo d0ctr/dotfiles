@@ -117,56 +117,72 @@
 # aerospace main
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#layout
-alt - 0x2C : aerospace layout tiles horizontal vertical
-alt - 0x2B : aerospace layout accordion horizontal vertical
+cmd - 0x2C : aerospace layout tiles horizontal vertical
+cmd - 0x2B : aerospace layout accordion horizontal vertical
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#focus
-alt - 0x04 : aerospace focus left
-alt - 0x26 : aerospace focus down
-alt - 0x28 : aerospace focus up
-alt - 0x25 : aerospace focus right
+cmd - 0x04 : aerospace focus left
+cmd - 0x26 : aerospace focus down
+cmd - 0x28 : aerospace focus up
+cmd - 0x25 : aerospace focus right
 
-alt - home : aerospace focus left
-alt - pagedown : aerospace focus down
-alt - pageup : aerospace focus up
-alt - end : aerospace focus right
+cmd - home : aerospace focus left
+cmd - pagedown : aerospace focus down
+cmd - pageup : aerospace focus up
+cmd - end : aerospace focus right
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#move
-alt + shift - 0x04 : aerospace move left
-alt + shift - 0x26 : aerospace move down
-alt + shift - 0x28 : aerospace move up
-alt + shift - 0x25 : aerospace move right
+cmd + shift - 0x04 : aerospace move left
+cmd + shift - 0x26 : aerospace move down
+cmd + shift - 0x28 : aerospace move up
+cmd + shift - 0x25 : aerospace move right
 
-alt + shift - home : aerospace move left
-alt + shift - pagedown : aerospace move down
-alt + shift - pageup : aerospace move up
-alt + shift - end : aerospace move right
+cmd + shift - home : aerospace move left
+cmd + shift - pagedown : aerospace move down
+cmd + shift - pageup : aerospace move up
+cmd + shift - end : aerospace move right
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#resize
-alt - 0x1B : aerospace resize smart -50
-alt - 0x18 : aerospace resize smart +50
+cmd - 0x1B : aerospace resize smart -50
+cmd - 0x18 : aerospace resize smart +50
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace
-alt - 0x0C : aerospace workspace 1
-alt - 0x0D : aerospace workspace 2
-alt - 0x0E : aerospace workspace 3
-alt - 0x23 : aerospace workspace 4
-alt - 0x21 : aerospace workspace 5
-alt - 0x1E : aerospace workspace 6
+cmd - 0x0C : aerospace workspace 1
+cmd - 0x0D : aerospace workspace 2
+cmd - 0x0E : aerospace workspace 3
+cmd - 0x23 : aerospace workspace 4
+cmd - 0x21 : aerospace workspace 5
+cmd - 0x1E : aerospace workspace 6
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
-alt + shift - 0x0C : aerospace move-node-to-workspace 1
-alt + shift - 0x0D : aerospace move-node-to-workspace 2
-alt + shift - 0x0E : aerospace move-node-to-workspace 3
-alt + shift - 0x23 : aerospace move-node-to-workspace 4
-alt + shift - 0x21 : aerospace move-node-to-workspace 5
-alt + shift - 0x1E : aerospace move-node-to-workspace 6
+cmd + shift - 0x0C : aerospace move-node-to-workspace 1
+cmd + shift - 0x0D : aerospace move-node-to-workspace 2
+cmd + shift - 0x0E : aerospace move-node-to-workspace 3
+cmd + shift - 0x23 : aerospace move-node-to-workspace 4
+cmd + shift - 0x21 : aerospace move-node-to-workspace 5
+cmd + shift - 0x1E : aerospace move-node-to-workspace 6
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
-alt - 0x30 : aerospace workspace-back-and-forth
+cmd - 0x30 : aerospace workspace-back-and-forth
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#move-workspace-to-monitor
-alt + shift - 0x30 : aerospace move-workspace-to-monitor --wrap-around next
+cmd + shift - 0x30 : aerospace move-workspace-to-monitor --wrap-around next
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#mode
-alt + shift - 0x29 : aerospace mode service
+cmd + shift - 0x29 : aerospace mode service
+
+# some shortcuts to native calls
+cmd + ctrl - 0x0C | cmd - 0x0C
+cmd + ctrl - 0x0D | cmd - 0x0D
+cmd + ctrl - 0x0E | cmd - 0x0E
+cmd + ctrl - 0x23 | cmd - 0x23
+cmd + ctrl - 0x21 | cmd - 0x21
+cmd + ctrl - 0x1E | cmd - 0x1E
+
+# escape the following keypresses
+:: esc
+
+cmd - escape ; esc
+
+esc < cmd - escape ; default
+
