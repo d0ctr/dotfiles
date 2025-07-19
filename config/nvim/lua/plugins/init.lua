@@ -14,7 +14,15 @@ return {
     -- https://github.com/nvim-telescope/telescope.nvim
     { 'nvim-telescope/telescope.nvim', tag = '0.1.8', dependencies = { 'nvim-lua/plenary.nvim' } },
     -- https://github.com/nvim-treesitter/nvim-treesitter
-    { 'nvim-treesitter/nvim-treesitter', branch = 'master', lazy = false, build = ':TSUpdate' },
+    {
+        'nvim-treesitter/nvim-treesitter',
+        branch = 'master',
+        lazy = false,
+        build = ':TSUpdate',
+        config = function() 
+            require('config.treesitter')
+        end
+    },
 
 }
 
