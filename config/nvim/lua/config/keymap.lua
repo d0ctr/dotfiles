@@ -12,3 +12,6 @@ vim.keymap.set('n', '<leader>of', function()
     vim.cmd(':Ex')
 end)
 
+vim.keymap.set('n', '<leader>nt', function()
+    vim.cmd(':sp | terminal')
+end)

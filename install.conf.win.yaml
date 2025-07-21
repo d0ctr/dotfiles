@@ -6,10 +6,7 @@
 - clean: ['~']
 
 - link:
-    ~/.tmux.conf:       tmux.conf
-    ~/.aerospace.toml:  aerospace.toml
-    ~/.config/nvim:     config/nvim
-    ~/.config/skhd:     config/skhd
+    ~/.config/whkdrc:   config/whkdrc
 
 - create:
     - ~/.config
