@@ -24,7 +24,7 @@ return {
             }, {
                 { name = "buffer" },
             })
-            table.insert(sources, { name = 'snippet' } )
+            table.insert(sources, { name = 'snippets' } )
 
             return {
                 completion = {
