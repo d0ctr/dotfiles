@@ -6,10 +6,10 @@ vim.g.maplocalleader = "\\"
 
 require('config.lazy')
 
-vim.cmd("set expandtab")
-vim.cmd("set shiftwidth=4")
-vim.cmd("set sb")
-vim.cmd("set number")
-vim.cmd("set relativenumber")
+vim.opt.expandtab = true
+vim.opt.shiftwidth = 4
+vim.opt.sb = true
+vim.opt.number = true
+vim.opt.relativenumber = true
 
 require('config.keymap')

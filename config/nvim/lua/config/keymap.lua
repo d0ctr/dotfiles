@@ -10,8 +10,8 @@ vim.keymap.set('x', '<C-_>', '<Plug>(comment_toggle_linewise_visual)')
 
 vim.keymap.set('n', '<leader>of', function()
     vim.cmd(':Ex')
-end)
+end, { desc = 'netrw' })
 
 vim.keymap.set('n', '<leader>nt', function()
     vim.cmd(':sp | terminal')
-end)
+end, { desc = 'New terminal (via :split)' })

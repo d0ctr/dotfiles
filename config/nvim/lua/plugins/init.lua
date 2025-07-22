@@ -19,10 +19,11 @@ return {
         branch = 'master',
         lazy = false,
         build = ':TSUpdate',
-        config = function() 
+        config = function()
             require('config.treesitter')
         end
     },
-
+    -- https://github.com/ThePrimeagen/vim-be-good
+    { 'ThePrimeagen/vim-be-good' },
 }
 
