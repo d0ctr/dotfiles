@@ -11,7 +11,7 @@ after-login-command = []
 # Available commands : https://nikitabobko.github.io/AeroSpace/commands
 after-startup-command = [
   'exec-and-forget borders active_color="glow(0xFF324376)" hidpi=on width=5.0',
-  'exec-and-forget skhd -c ~/.config/skhd/skhd.aerospace.rc'
+  'exec-and-forget skhd -c ~/.config/skhd/skhd.aerospace.rc --start-service'
 ]
 
 # Start AeroSpace at login

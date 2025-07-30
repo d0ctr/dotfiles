@@ -15,3 +15,5 @@ end, { desc = 'netrw' })
 vim.keymap.set('n', '<leader>nt', function()
     vim.cmd(':sp | terminal')
 end, { desc = 'New terminal (via :split)' })
+
+vim.keymap.set('x', '<leader>y', '"+y')
