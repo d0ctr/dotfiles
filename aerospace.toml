@@ -11,7 +11,7 @@ after-login-command = []
 # Available commands : https://nikitabobko.github.io/AeroSpace/commands
 after-startup-command = [
   'exec-and-forget borders active_color="glow(0xFF324376)" hidpi=on width=5.0',
-  'exec-and-forget skhd -c ~/.config/skhd/skhd.aerospace.rc --start-service'
+  'exec-and-forget skhd -c ~/.config/skhd/skhd.aerospace.rc'
 ]
 
 # Start AeroSpace at login
@@ -215,10 +215,10 @@ automatically-unhide-macos-hidden-apps = false
     shift-down = ['volume set 0', 'mode main']
 
 # some windows floating by default
-[[on-window-detected]]
-  if.app-id = 'com.googlecode.iterm2'
-  check-further-callbacks = true
-  run = 'layout floating'
+# [[on-window-detected]]
+#   if.app-id = 'com.googlecode.iterm2'
+#   check-further-callbacks = true
+#   run = 'layout floating'
 
 [[on-window-detected]]
   if.app-id = 'net.kovidgoyal.kitty'
@@ -230,22 +230,30 @@ automatically-unhide-macos-hidden-apps = false
   check-further-callbacks = true
   run = 'layout floating'
 
-[[on-window-detected]]
-  if.app-id = 'us.zoom.xos'
-  check-further-callbacks = true
-  run = 'layout floating'
+# [[on-window-detected]]
+#   if.app-id = 'us.zoom.xos'
+#   check-further-callbacks = true
+#   run = 'layout floating'
 
-# workspace 2
+[[on-window-detected]]
+  if.app-id = 'com.apple.Music'
+  run = ['layout floating']
+
+[[on-window-detected]]
+  if.app-id = 'com.apple.finder'
+  run = ['layout floating']
+
+# workspace W
 [[on-window-detected]]
   if.app-id = 'com.google.Chrome'
   run = 'move-node-to-workspace 2'
 
-# workspace 3
+# workspace E
 [[on-window-detected]]
   if.app-id = 'com.jetbrains.intellij.ce'
   run = 'move-node-to-workspace 3'
 
-# workspace 4
+# workspace P
 [[on-window-detected]]
   if.app-id = 'com.microsoft.teams2'
   run = ['move-node-to-workspace 4']
@@ -258,7 +266,11 @@ automatically-unhide-macos-hidden-apps = false
   if.app-id = 'com.microsoft.Outlook'
   run = ['move-node-to-workspace 4']
 
-# workspace 5
+[[on-window-detected]]
+  if.app-id = 'us.zoom.xos'
+  run = ['move-node-to-workspace 4']
+
+# workspace {
 [[on-window-detected]]
   if.app-id = 'com.hnc.Discord'
   run = ['move-node-to-workspace 5']
@@ -266,13 +278,4 @@ automatically-unhide-macos-hidden-apps = false
 [[on-window-detected]]
   if.app-id = 'ru.keepcoder.Telegram'
   run = ['move-node-to-workspace 5']
-
-[[on-window-detected]]
-  if.app-id = 'com.apple.Music'
-  run = ['layout floating']
-
-[[on-window-detected]]
-  if.app-id = 'com.apple.finder'
-  run = ['layout floating']
-
 

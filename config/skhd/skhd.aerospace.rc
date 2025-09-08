@@ -187,7 +187,7 @@ cmd - escape ; esc
 esc < cmd - escape ; default
 
 # some app-dpendent shortcuts
-.define browser_apps ["chrome", "safari", "firefox", "edge"]
+.define browser_apps ["google chrome", "safari", "firefox", "edge"]
 
 cmd + ctrl - 0x04 [ @browser_apps | ctrl + shift - tab ]
 cmd + ctrl - 0x25 [ @browser_apps | ctrl - tab ]

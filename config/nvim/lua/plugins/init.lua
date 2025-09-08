@@ -25,5 +25,14 @@ return {
     },
     -- https://github.com/ThePrimeagen/vim-be-good
     { 'ThePrimeagen/vim-be-good' },
+    -- https://github.com/tzachar/local-highlight.nvim
+    {
+        'tzachar/local-highlight.nvim',
+        opts = {
+            animate = { enabled = false },
+            file_types = {},
+            disable_file_types = { 'md' },
+        },
+    },
 }
 
