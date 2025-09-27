@@ -1,0 +1,22 @@
+@define-color background-color #1a1b26;
+@define-color border-color #33ccff;
+@define-color label #a9b1d6;
+@define-color image #a9b1d6;
+@define-color progress #a9b1d6;
+
+window {
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
+}
+
+.osd,
+#osd,
+osd {
+  background-color: alpha(@background-color, 0.9);
+  border: 1px solid @border-color;
+  border-radius: 10px;
+  box-shadow: none;
+}
