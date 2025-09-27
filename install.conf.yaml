@@ -7,7 +7,6 @@
 
 - link:
     ~/.config/nvim:     config/nvim
-    ~/.config/skhd:     config/skhd
 
 - create:
     - ~/.config
