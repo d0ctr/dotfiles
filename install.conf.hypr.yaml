@@ -6,6 +6,7 @@
 - clean: ['~']
 
 - link:
+    ~/.config/hypr:     config/hypr
     ~/.config/nvim:     config/nvim
     ~/.config/skhd:     config/skhd
 

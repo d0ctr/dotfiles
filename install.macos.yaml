@@ -6,6 +6,7 @@
 - clean: ['~']
 
 - link:
+    ~/.aerospace.toml:  aerospace.toml
     ~/.config/nvim:     config/nvim
     ~/.config/skhd:     config/skhd
 
