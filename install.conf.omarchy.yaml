@@ -1,0 +1,18 @@
+- defaults:
+    link:
+      relink: true
+      force:  true
+
+- clean: ['~']
+
+- link:
+    ~/.config/hypr:     config/hypr
+    ~/.config/nvim:     config/nvim
+    ~/.config/omarchy/themes/my-theme:     config/omarchy/themes/my-theme
+    ~/.config/omarchy/current/theme:     config/omarchy/themes/my-theme
+
+- create:
+    - ~/.config/omarchy
+
+- shell:
+  - [git submodule update --init --recursive, Installing submodules]
