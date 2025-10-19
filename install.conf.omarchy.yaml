@@ -8,8 +8,8 @@
 - link:
     ~/.config/hypr:     config/hypr
     ~/.config/nvim:     config/nvim
+    ~/.config/waybar/config.jsonc:     config/waybar/config.jsonc
     ~/.config/omarchy/themes/my-theme:     config/omarchy/themes/my-theme
-    ~/.config/omarchy/current/theme:     config/omarchy/themes/my-theme
 
 - create:
     - ~/.config/omarchy

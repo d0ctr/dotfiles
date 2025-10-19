@@ -2,9 +2,6 @@
 @define-color background #1a1b26;
 @define-color accent     #33ccff;
 
-/* * { */
-/*     border-radius: 10px; */
-/* } */
 * {
     border-radius: 10px;
     border: 1px solid transparent;
@@ -21,4 +18,11 @@
     border: 2px solid transparent;
     border-color: @accent;
     border-radius: 10px;
+}
+
+#language,
+#bluetooth,
+#network {
+  min-width: 12px;
+  margin: 0 7.5px;
 }
