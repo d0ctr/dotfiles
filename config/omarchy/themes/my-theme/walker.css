@@ -5,8 +5,6 @@
 @define-color foreground #cfc9c2;
 @define-color background #1a1b26;
 
-#window,
-#window > #box,
-#box {
+* {
     border-radius: 10px
 }
