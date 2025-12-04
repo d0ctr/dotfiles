@@ -76,8 +76,10 @@ esc < cmd - escape ; default
 
 cmd + ctrl - 0x04 [ @browser_apps | ctrl + shift - tab ]
 cmd + ctrl - 0x25 [ @browser_apps | ctrl - tab ]
+ctrl - 0x11 [ @browser_apps | cmd - 0x11 ]
+ctrl - 0x0D [ @browser_apps | cmd - 0x0D ]
 
 # vertical tabbing apps
-.define vertical_tab ["google chrome", "safari", "firefox", "edge" ]
-cmd + ctrl - 0x28 [ "intellij idea" | ctrl + shift - tab ]
-cmd + ctrl - 0x26 [ "intellij idea" | ctrl - tab ]
+.define vertical_tab ["intellij idea"]
+cmd + ctrl - 0x28 [ @vertical_tab | ctrl + shift - tab ]
+cmd + ctrl - 0x26 [ @vertical_tab | ctrl - tab ]

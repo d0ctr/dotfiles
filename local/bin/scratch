@@ -1,0 +1,314 @@
+#!/bin/bash
+
+# Exit on error, undefined variables, and pipe failures
+set -euo pipefail
+
+# Constants
+readonly ARCHIVE_DIR="${HOME}/.scratch_archive"
+readonly SESSION_FILE="/tmp/scratch_session_${USER}"
+readonly TEMPLATE_DIR="${HOME}/.scratch_templates"
+readonly HISTORY_FILE="${HOME}/.scratch_history"
+readonly MAX_ARCHIVE_AGE=30  # days
+readonly SCRIPT_NAME=$(basename "$0")
+
+# Error handling
+trap 'cleanup $?' EXIT
+trap 'exit 2' INT TERM
+
+cleanup() {
+    local exit_code=$1
+    # Clean up temporary files if any
+    [ -f "$SESSION_FILE.tmp" ] && rm -f "$SESSION_FILE.tmp"
+    exit "$exit_code"
+}
+
+die() {
+    echo "Error: $1" >&2
+    exit 1
+}
+
+# Function to print usage with heredoc for better maintenance
+print_usage() {
+    cat << EOF
+Usage: $SCRIPT_NAME [OPTIONS]
+Create and manage scratch directories
+
+Options:
+    -n, --name NAME     Specify scratch name (default: scratch_TIMESTAMP)
+    -o, --open          Open scratch upon creation with the editor
+    -e, --editor EDITOR Editor to open scratch with (default: code)
+    -p, --path PATH     Specify path for scratch creation
+    --save              Mark scratch as permanent
+    -l, --list          List active scratches
+    -a, --archive-list  List archived scratches
+    -t, --template NAME Use specified template
+    --list-templates    List available templates
+    -h, --help          Show this help message
+
+Multiple flags can be combined with a single dash (e.g., -la)
+EOF
+}
+
+# macOS compatible timestamp function
+get_timestamp() {
+    date "+%Y%m%d_%H%M%S"
+}
+
+# Initialize session with proper error checking
+init_session() {
+    if ! touch "$SESSION_FILE" 2>/dev/null; then
+        die "Cannot create session file: $SESSION_FILE"
+    fi
+}
+
+# macOS compatible archive cleaning
+clean_old_archives() {
+    [ -d "$ARCHIVE_DIR" ] || return 0
+    
+    # macOS compatible find command without -mtime
+    find "$ARCHIVE_DIR" -maxdepth 1 -type d -not -path "$ARCHIVE_DIR" | while read -r dir; do
+        # Get modification time in seconds since epoch
+        mod_time=$(stat -f "%m" "$dir")
+        current_time=$(date +%s)
+        age_seconds=$((current_time - mod_time))
+        age_days=$((age_seconds / 86400))
+        
+        if [ "$age_days" -gt "$MAX_ARCHIVE_AGE" ]; then
+            rm -rf "$dir" 2>/dev/null || true
+        fi
+    done
+}
+
+# Improved archive function with error checking and history management
+archive_scratch() {
+    local scratch_path="$1"
+    local scratch_name
+    scratch_name=$(basename "$scratch_path")
+    
+    if [ ! -d "$scratch_path" ]; then
+        return 1
+    fi
+    
+    mkdir -p "$ARCHIVE_DIR" || die "Cannot create archive directory"
+    
+    if ! mv "$scratch_path" "$ARCHIVE_DIR/${scratch_name}_$(get_timestamp)"; then
+        die "Failed to archive scratch: $scratch_path"
+    fi
+    
+    # Remove from history after successful archive
+    remove_from_history "$scratch_path"
+}
+
+# Optimized session checking using bash pattern matching
+is_current_session() {
+    local scratch_path="$1"
+    local line
+    
+    while IFS= read -r line; do
+        [ "$line" = "$scratch_path" ] && return 0
+    done < "$SESSION_FILE"
+    return 1
+}
+
+# Function to add scratch to history
+add_to_history() {
+    local scratch_path="$1"
+    local timestamp=$(get_timestamp)
+    echo "${timestamp}|${scratch_path}" >> "$HISTORY_FILE"
+}
+
+# Function to remove scratch from history
+remove_from_history() {
+    local scratch_path="$1"
+    local temp_file="${HISTORY_FILE}.tmp"
+    
+    grep -v "|${scratch_path}$" "$HISTORY_FILE" > "$temp_file" || true
+    mv "$temp_file" "$HISTORY_FILE"
+}
+
+# macOS compatible scratch listing
+list_scratches() {
+    local type="$1"
+
+    if [ "$type" = "active" ]; then
+        echo "Active scratches:"
+        if [ -f "$HISTORY_FILE" ]; then
+            while IFS='|' read -r timestamp scratch; do
+                if [ -d "$scratch" ]; then  # Only show if directory still exists
+                    if is_current_session "$scratch"; then
+                        printf "  %s (current session)\n" "$scratch"
+                    else
+                        printf "  %s (created: %s)\n" "$scratch" "$timestamp"
+                    fi
+                else
+                    # Clean up history if directory doesn't exist
+                    remove_from_history "$scratch"
+                fi
+            done < "$HISTORY_FILE"
+        fi
+    elif [ "$type" = "archive" ] && [ -d "$ARCHIVE_DIR" ]; then
+        echo "Archived scratches:"
+        find "$ARCHIVE_DIR" -maxdepth 1 -type d -name "scratch_*" | while read -r dir; do
+            printf "  %s\n" "$(basename "$dir")"
+        done
+    fi
+}
+
+# Improved template application with better error handling
+apply_template() {
+    local scratch_path="$1"
+    local template_name="$2"
+    local template_path="${TEMPLATE_DIR}/${template_name}"
+
+    if [ ! -d "$template_path" ]; then
+        die "Template not found: $template_name"
+    fi
+
+    cp -r "${template_path}/." "$scratch_path/" || 
+        die "Failed to apply template: $template_name"
+}
+
+# Enhanced scratch creation with input validation
+create_scratch() {
+    local name="scratch_$(get_timestamp)"
+    local path="."
+    local permanent=false
+    local template=""
+    local editor="code"
+    local open=false
+
+    # Parse arguments with better error checking
+    while [ $# -gt 0 ]; do
+        case "$1" in
+            -n|--name)
+                [ -z "${2:-}" ] && die "Missing scratch name"
+                name="$2"
+                permanent=true
+                shift 2
+                ;;
+            -p|--path)
+                [ -z "${2:-}" ] && die "Missing path"
+                path="$2"
+                shift 2
+                ;;
+            -t|--template)
+                [ -z "${2:-}" ] && die "Missing template name"
+                template="$2"
+                shift 2
+                ;;
+            -o|--open)
+                open=true
+                shift
+                ;;
+            -e|--editor)
+                [ -z "${2:-}" ] && die "Missing editor name"
+                editor="$2"
+                shift 2
+                ;;
+            *)
+                die "Unknown option: $1"
+                ;;
+        esac
+    done
+
+    # Validate path
+    if [ ! -d "$path" ]; then
+        die "Invalid path: $path"
+    fi
+
+    # Create scratch with error checking
+    local scratch_path="${path}/${name}"
+    mkdir -p "$scratch_path" || die "Failed to create scratch directory"
+
+    if [ "$permanent" != true ]; then
+        # Update session file atomically
+        echo "$scratch_path" >> "$SESSION_FILE" || die "Failed to update session file"
+
+        # Add to history file
+        add_to_history "$scratch_path"
+    fi
+
+    # Apply template if specified
+    [ -n "$template" ] && apply_template "$scratch_path" "$template"
+
+    echo "Created scratch: $scratch_path" >&2
+    if [ "$open" = true ]; then
+        echo "Opening with: $editor"
+        cd "$scratch_path" && eval "$editor" "."
+    else
+        echo "$scratch_path"
+    fi
+}
+
+# Optimized archive function for existing scratches
+archive_existing() {
+    [ -f "$HISTORY_FILE" ] || return 0
+    
+    while IFS='|' read -r timestamp scratch; do
+        if [ -d "$scratch" ]; then  # Only show if directory still exists
+            if ! is_current_session "$scratch"; then
+                archive_scratch "$scratch"
+            fi
+        fi
+    done < "$HISTORY_FILE"
+}
+
+list_templates() {
+    echo "Available templates:"
+    find "$TEMPLATE_DIR" -maxdepth 1 -type d | while read -r dir; do
+        if [ "$dir" != "$TEMPLATE_DIR" ]; then
+            printf "  %s\n" "$(basename "$dir")"
+        fi
+    done
+}
+
+# Main script execution with proper initialization
+main() {
+    init_session
+    clean_old_archives
+
+    local create=true
+    while [ $# -gt 0 ]; do
+        case "$1" in
+            -h|--help)
+                print_usage
+                exit 0
+                ;;
+            -l|--list)
+                list_scratches "active"
+                create=false
+                shift
+                continue
+                ;;
+            -a|--archive-list)
+                list_scratches "archive"
+                create=false
+                shift
+                continue
+                ;;
+            --list-templates)
+                list_templates
+                create=false
+                shift
+                continue
+                ;;
+            -*)
+                # Handle combined flags more efficiently
+                if [ ${#1} -gt 2 ]; then
+                    local flags="${1:1}"
+                    shift
+                    for flag in $(echo "$flags" | grep -o .); do
+                        set -- "-$flag" "$@"
+                    done
+                    continue
+                fi
+                ;;
+        esac
+        break
+    done
+
+    archive_existing
+    [ "$create" = true ] && create_scratch "$@"
+}
+
+main "$@"
