@@ -10,9 +10,14 @@
     ~/.config/nvim:     config/nvim
     ~/.config/waybar/config.jsonc:     config/waybar/config.jsonc
     ~/.config/omarchy/themes/my-theme:     config/omarchy/themes/my-theme
+    ~/.local/bin/:
+      create: true
+      glob: true
+      path: local/bin/*
 
 - create:
     - ~/.config/omarchy
+    - ~/.local
 
 - shell:
   - [git submodule update --init --recursive, Installing submodules]

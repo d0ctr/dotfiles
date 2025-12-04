@@ -8,9 +8,14 @@
 - link:
     ~/.config/hypr:     config/hypr
     ~/.config/nvim:     config/nvim
+    ~/.local/bin/:
+      create: true
+      glob: true
+      path: local/bin/*
 
 - create:
     - ~/.config
+    - ~/.local
 
 - shell:
   - [git submodule update --init --recursive, Installing submodules]

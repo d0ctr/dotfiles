@@ -9,9 +9,14 @@
     ~/.aerospace.toml:  aerospace.toml
     ~/.config/nvim:     config/nvim
     ~/.config/skhd:     config/skhd
+    ~/.local/bin/:
+      create: true
+      glob: true
+      path: local/bin/*
 
 - create:
     - ~/.config
+    - ~/.local
 
 - shell:
   - [git submodule update --init --recursive, Installing submodules]
