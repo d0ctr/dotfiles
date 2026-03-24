@@ -49,5 +49,18 @@ return {
             },
         },
     },
+
+    -- https://github.com/rust-lang/rust.vim
+    {
+        'rust-lang/rust.vim',
+        init = function()
+            local sysname = vim.uv.os_uname().sysname
+            if sysname == 'Darwin' then
+                vim.g.rust_clip_command = 'pbcopy'
+            elseif sysname == 'Linux' then
+                vim.g.rust_clip_command = 'xclip -selection clipboard'
+            end
+        end,
+    }
 }
 
