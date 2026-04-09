@@ -1,3 +1,8 @@
+# first and foremost
+
+.blacklist [
+    "screen sharing"
+]
 
 # aerospace main
 
@@ -73,11 +78,18 @@ esc < cmd - escape ; default
 
 # some app-dependent shortcuts
 .define browser_apps ["google chrome", "safari", "firefox", "edge" ]
+.define arrowed_tabs [ "kitty" ]
 
-cmd + ctrl - 0x04 [ @browser_apps | ctrl + shift - tab ]
-cmd + ctrl - 0x25 [ @browser_apps | ctrl - tab ]
-ctrl - 0x11 [ @browser_apps | cmd - 0x11 ]
-ctrl - 0x0D [ @browser_apps | cmd - 0x0D ]
+cmd + ctrl - 0x04 [ 
+    @browser_apps | ctrl + shift - tab
+    @arrowed_tabs | ctrl + shift - right
+]
+cmd + ctrl - 0x25 [
+    @browser_apps | ctrl - tab
+    @arrowed_tabs | ctrl + shift - left
+]
+# ctrl - 0x11 [ @browser_apps | cmd - 0x11 ]
+# ctrl - 0x0D [ @browser_apps | cmd - 0x0D ]
 
 # vertical tabbing apps
 .define vertical_tab ["intellij idea"]

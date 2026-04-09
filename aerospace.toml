@@ -220,10 +220,10 @@ automatically-unhide-macos-hidden-apps = false
 #   check-further-callbacks = true
 #   run = 'layout floating'
 
-[[on-window-detected]]
-  if.app-id = 'net.kovidgoyal.kitty'
-  check-further-callbacks = true
-  run = 'layout floating'
+# [[on-window-detected]]
+#   if.app-id = 'net.kovidgoyal.kitty'
+#   check-further-callbacks = true
+#   run = 'layout floating'
 
 [[on-window-detected]]
   if.app-id = 'com.cisco.secureclient.gui'
@@ -250,7 +250,7 @@ automatically-unhide-macos-hidden-apps = false
 
 # workspace E
 [[on-window-detected]]
-  if.app-id = 'com.jetbrains.intellij.ce'
+  if.app-id = 'com.jetbrains.intellij'
   run = 'move-node-to-workspace 3'
 
 # workspace P
