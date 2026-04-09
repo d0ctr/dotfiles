@@ -42,3 +42,4 @@ vim.opt.titlestring = "%{%v:lua.title()%}"
 
 require('config.keymap')
 require('config.terminal')
+require('config.treesitter')

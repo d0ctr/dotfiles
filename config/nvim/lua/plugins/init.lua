@@ -16,12 +16,12 @@ return {
     -- https://github.com/nvim-treesitter/nvim-treesitter
     {
         'nvim-treesitter/nvim-treesitter',
-        branch = 'master',
+        branch = 'main',
         lazy = false,
         build = ':TSUpdate',
-        config = function()
-            require('config.treesitter')
-        end
+        -- config = function()
+        --     require('config.treesitter')
+        -- end
     },
     -- https://github.com/ThePrimeagen/vim-be-good
     { 'ThePrimeagen/vim-be-good' },
