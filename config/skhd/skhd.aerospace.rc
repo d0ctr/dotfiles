@@ -82,11 +82,11 @@ esc < cmd - escape ; default
 
 cmd + ctrl - 0x04 [ 
     @horizontal_tabs | ctrl + shift - tab
-    @arrowed_tabs | ctrl + shift - right
+    @arrowed_tabs | ctrl + shift - left
 ]
 cmd + ctrl - 0x25 [
     @horizontal_tabs | ctrl - tab
-    @arrowed_tabs | ctrl + shift - left
+    @arrowed_tabs | ctrl + shift - right
 ]
 # ctrl - 0x11 [ @horizontal_tabs | cmd - 0x11 ]
 # ctrl - 0x0D [ @horizontal_tabs | cmd - 0x0D ]
