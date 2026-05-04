@@ -1,0 +1,154 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# ── Dependency checks ────────────────────────────────────────────────────────
+
+if ! command -v fzf &>/dev/null; then
+    echo "Error: fzf is not installed. Install it with your package manager." >&2
+    echo "  e.g. brew install fzf  /  apt install fzf  /  pacman -S fzf" >&2
+    exit 1
+fi
+
+if ! command -v man &>/dev/null; then
+    echo "Error: man is not installed." >&2
+    exit 1
+fi
+
+# Prefer ripgrep (rg) over grep when available
+if command -v rg &>/dev/null; then
+    GREP() { rg "$@"; }
+else
+    GREP() { grep "$@"; }
+fi
+
+# ── Locate man page directories ──────────────────────────────────────────────
+
+# Collect search paths: from manpath/man --path
+collect_mandirs() {
+    local dirs=""
+
+    # Try manpath first, then man --path (macOS/BSD)
+    if command -v manpath &>/dev/null; then
+        dirs=$(manpath 2>/dev/null || true)
+    fi
+    if [[ -z "$dirs" ]] && man --path &>/dev/null 2>&1; then
+        dirs=$(man --path 2>/dev/null || true)
+    fi
+
+    # Fallback: common locations
+    if [[ -z "$dirs" ]]; then
+        dirs="/usr/share/man:/usr/local/share/man:/usr/man:/usr/local/man"
+    fi
+
+    # Append MANPATH env var if set
+    [[ -n "${MANPATH:-}" ]] && dirs="${dirs}:${MANPATH}"
+
+    # Split on ':' and deduplicate, emit only existing dirs
+    tr ':' '\n' <<< "$dirs" | sort -u | while read -r d; do
+        [[ -d "$d" ]] && echo "$d"
+    done
+}
+
+# ── Build the page list ──────────────────────────────────────────────────────
+
+build_page_list() {
+    local mandirs
+    mandirs=$(collect_mandirs)
+
+    if [[ -z "$mandirs" ]]; then
+        echo "Error: No man page directories found." >&2
+        exit 1
+    fi
+
+    # Find every man page file, then strip path/section/extensions to get
+    # a "name(section)" label, e.g. ls(1), printf(3)
+    while IFS= read -r dir; do
+        find "$dir" -maxdepth 2 -type f -o -type l 2>/dev/null
+    done <<< "$mandirs" \
+    | GREP -e '/man[0-9][^/]*/[^/]+\.[0-9]' \
+    | awk -F'/' '
+        {
+            file = $NF                       # e.g. ls.1.gz
+            # Detect section from parent dir name (man1, man3p, …)
+            dir  = $(NF-1)                   # e.g. man1
+            sub(/^man/, "", dir)             # e.g. 1
+            section = dir
+
+            # Strip compression suffixes
+            gsub(/\.(gz|bz2|xz|zst|lz)$/, "", file)
+
+            # Strip the trailing .N or .Np extension (the section suffix)
+            sub(/\.[0-9][^.]*$/, "", file)
+
+            # Output "name(section)"
+            printf "%s(%s)\n", file, section
+        }
+    ' \
+    | sort -u
+}
+
+# ── Main ─────────────────────────────────────────────────────────────────────
+
+main() {
+    # Allow an optional initial query from argv
+    local initial_query="${*:-}"
+
+    echo "Scanning man pages…" >&2
+    local page_list
+    page_list=$(build_page_list)
+
+    if [[ -z "$page_list" ]]; then
+        echo "No man pages found on this system." >&2
+        exit 1
+    fi
+
+    local count
+    count=$(wc -l <<< "$page_list")
+    echo "Found ${count// /} entries. Opening fzf…" >&2
+
+    # The fzf --preview string runs in a plain subshell that won't inherit the
+    # GREP function, so resolve the binary name now and interpolate it directly.
+    local grep_cmd
+    command -v rg &>/dev/null && grep_cmd="rg" || grep_cmd="grep"
+
+    # Launch fzf with a live man-page preview
+    local choice
+            # --height='90%' \
+            # --border \
+    choice=$(
+        fzf \
+            --ansi \
+            --query="$initial_query" \
+            --prompt="man> " \
+            --header="ENTER: open  |  ESC/^C: quit" \
+            --preview="
+                entry={};
+                name=\$(echo \"\$entry\" | sed 's/([^)]*)$//');
+                section=\$(echo \"\$entry\" | ${grep_cmd} -oe '\([^)]+\)\$' | tr -d '()');
+                if [[ -n \"\$section\" ]]; then
+                    man \"\$section\" \"\$name\" 2>/dev/null | col -bx | head -80 || echo '(no preview)';
+                else
+                    man \"\$name\" 2>/dev/null | col -bx | head -80 || echo '(no preview)';
+                fi
+            " \
+            --preview-window='top:65%:nowrap' \
+            --bind='alt-k:preview-up,alt-j:preview-down' \
+            <<< "$page_list" || true
+    )
+
+    [[ -z "$choice" ]] && exit 0
+
+    # Parse name and section from "name(section)"
+    local name section
+    name=$(echo "$choice" | sed 's/([^)]*)$//')
+    section=$(echo "$choice" | $grep_cmd -oe '\([^)]+\)$' | tr -d '()')
+
+    if [[ -n "$section" ]]; then
+        exec man "$section" "$name"
+    else
+        exec man "$name"
+    fi
+}
+
+main "$@"

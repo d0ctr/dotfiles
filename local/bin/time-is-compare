@@ -1,0 +1,31 @@
+#/usr/bin/env bash
+
+if [ "$#" -lt 2 ]; then
+    bold=$(tput bold)
+    normal=$(tput sgr0)
+
+    echo "USAGE"
+    echo "     $0 ${bold}TZ${normal} [${bold}TZ${normal}]..."
+    echo
+    echo "DESCRIPTION"
+    echo "     ${bold}time-is-compare${normal} - compare time between multiple timezones."
+    echo
+    echo "     ${bold}TZ${normal}    timezone in a format acceptable by time.is, usually a location or an"
+    echo "            abbreviation, i.e. CEST, PT, Moscow, New_York etc."
+    echo
+    exit 1
+fi
+
+BASE_URL="https://time.is/compare"
+COMPARE_FMT="%H%M_%-d_%B_%Y"
+
+datetime=$(LC_TIME= date +$COMPARE_FMT)
+
+tzs=
+
+for tz in "$@"; do
+    tz="$(echo $tz | sed 's/ \+/_/g')"
+    tzs="$tzs$tz/"
+done
+
+xdg-open "$BASE_URL/${datetime}_in_$tzs"
