@@ -50,10 +50,7 @@ datetime=$(LC_TIME= date +$COMPARE_FMT)
 tzs=
 quiet="false"
 
-# while [ $# -gt 0 ]; do
-echo "$*"
-for i in {1.."$#"}; do
-    arg="${*@[$i]}"
+for arg in "$@"; do
     case "$arg" in
         -h|--help)
             usage
@@ -62,13 +59,9 @@ for i in {1.."$#"}; do
         -l|--local)
             tz=$(date +%Z)
             tzs="$tzs$tz/"
-            # shift
-            # continue
             ;;
         -q|--quiet)
             quiet="true"
-            # shift
-            # continue
             ;;
         --*|-*)
             echo "Unknown option: $arg"
@@ -79,11 +72,8 @@ for i in {1.."$#"}; do
         *)
             tz="$(echo $arg | sed 's/ \+/_/g')"
             tzs="$tzs$tz/"
-            # shift
-            # continue
             ;;
     esac
-    # break
 done
 
 if [ -z "$tzs" ]; then

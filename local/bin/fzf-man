@@ -114,14 +114,11 @@ main() {
 
     # Launch fzf with a live man-page preview
     local choice
-            # --height='90%' \
-            # --border \
     choice=$(
         fzf \
             --ansi \
             --query="$initial_query" \
             --prompt="man> " \
-            --header="ENTER: open  |  ESC/^C: quit" \
             --preview="
                 entry={};
                 name=\$(echo \"\$entry\" | sed 's/([^)]*)$//');
@@ -133,6 +130,8 @@ main() {
                 fi
             " \
             --preview-window='top:65%:nowrap' \
+            --preview-label='alt-j/k: scroll down/up' \
+            --preview-label-pos='0:bottom' \
             --bind='alt-k:preview-up,alt-j:preview-down' \
             <<< "$page_list" || true
     )
