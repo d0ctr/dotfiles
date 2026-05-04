@@ -4,10 +4,11 @@
 set -euo pipefail
 
 # Constants
-readonly ARCHIVE_DIR="${HOME}/.scratch_archive"
+readonly SCRATCH_HOME="${HOME}/.local/share/scratch"
+readonly ARCHIVE_DIR="${SCRATCH_HOME}/archive"
 readonly SESSION_FILE="/tmp/scratch_session_${USER}"
-readonly TEMPLATE_DIR="${HOME}/.scratch_templates"
-readonly HISTORY_FILE="${HOME}/.scratch_history"
+readonly TEMPLATE_DIR="${SCRATCH_HOME}/templates"
+readonly HISTORY_FILE="${SCRATCH_HOME}/history"
 readonly MAX_ARCHIVE_AGE=30  # days
 readonly SCRIPT_NAME=$(basename "$0")
 

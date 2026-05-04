@@ -1,31 +1,114 @@
-#/usr/bin/env bash
+#!/usr/bin/env bash
 
-if [ "$#" -lt 2 ]; then
-    bold=$(tput bold)
-    normal=$(tput sgr0)
+usage() {
+    local bold=$(tput bold)
+    local normal=$(tput sgr0)
+
+    local empt="           "
+    local arg0="TZ         " && arg0="${bold}${arg0}${normal}"
+    local opt0="-h, --help " && opt0="${bold}${opt0}${normal}"
+    local opt1="-l, --local" && opt1="${bold}${opt1}${normal}"
+    local opt2="-q, --quiet" && opt2="${bold}${opt2}${normal}"
+
+    local opts=(-h --help -q --quiet)
+    local opts_fmt=
+    for opt in "${opts[@]}"; do
+        opts_fmt="${opts_fmt}${opts_fmt:+|}${bold}${opt}${normal}"
+    done
+    
 
     echo "USAGE"
-    echo "     $0 ${bold}TZ${normal} [${bold}TZ${normal}]..."
+    echo "     $(basename $0) [${opts_fmt}] ${bold}TZ${normal} [${bold}TZ${normal}]..."
     echo
     echo "DESCRIPTION"
-    echo "     ${bold}time-is-compare${normal} - compare time between multiple timezones."
+    echo "     ${bold}time-is-compare${normal} - compare time between multiple timezones using [time.is](https://time.is/compare)."
     echo
-    echo "     ${bold}TZ${normal}    timezone in a format acceptable by time.is, usually a location or an"
-    echo "            abbreviation, i.e. CEST, PT, Moscow, New_York etc."
+    echo "ARGUMENTS"
+    echo "     ${arg0}    timezone in a format acceptable by time.is, usually a location or an"
+    echo "     ${empt}    abbreviation, i.e. CEST, PT, Moscow, New_York etc."
     echo
+    echo "OPTIONS"
+    echo "     ${opt0}    print this message."
+    echo
+    echo "     ${opt1}    a replacement for ${bold}TZ${normal} that will expand to a local timezone."
+    echo
+    echo "     ${opt2}    do not open the link, print it instead."
+    echo
+}
+
+if [ "$#" -lt 1 ]; then
+    usage
     exit 1
 fi
 
 BASE_URL="https://time.is/compare"
 COMPARE_FMT="%H%M_%-d_%B_%Y"
+OPENERS=(xdg-open open $BROWSER)
 
 datetime=$(LC_TIME= date +$COMPARE_FMT)
 
 tzs=
+quiet="false"
 
-for tz in "$@"; do
-    tz="$(echo $tz | sed 's/ \+/_/g')"
-    tzs="$tzs$tz/"
+# while [ $# -gt 0 ]; do
+echo "$*"
+for i in {1.."$#"}; do
+    arg="${*@[$i]}"
+    case "$arg" in
+        -h|--help)
+            usage
+            exit 0
+            ;;
+        -l|--local)
+            tz=$(date +%Z)
+            tzs="$tzs$tz/"
+            # shift
+            # continue
+            ;;
+        -q|--quiet)
+            quiet="true"
+            # shift
+            # continue
+            ;;
+        --*|-*)
+            echo "Unknown option: $arg"
+            echo
+            usage
+            exit 1
+            ;;
+        *)
+            tz="$(echo $arg | sed 's/ \+/_/g')"
+            tzs="$tzs$tz/"
+            # shift
+            # continue
+            ;;
+    esac
+    # break
 done
 
-xdg-open "$BASE_URL/${datetime}_in_$tzs"
+if [ -z "$tzs" ]; then
+    # exit early with an error if `quiet`
+    [ "$quiet" == "true" ] && exit 1
+
+    echo "Failed to open, no timezones were supplied."
+    echo
+    usage
+    exit 1
+fi
+
+url="$BASE_URL/${datetime}_in_$tzs"
+
+if [ "$quiet" == "false" ]; then 
+    for opener in "${OPENERS[@]}"; do
+        if command -v "$opener" &>/dev/null; then
+            exec $opener $url
+        fi
+    done
+
+    echo "Failed to open, expected at least one of [$OPENERS]."
+    echo "Open manually: $url"
+    exit 1
+else
+    echo $url
+    exit 0
+fi
