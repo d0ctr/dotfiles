@@ -9,6 +9,7 @@
     ~/.aerospace.toml:  aerospace.toml
     ~/.config/nvim:     config/nvim
     ~/.config/skhd:     config/skhd
+    ~/.config/ghostty:  config/ghostty
     ~/.local/bin/:
       create: true
       glob: true

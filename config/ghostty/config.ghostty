@@ -1,0 +1,18 @@
+# vim:comments=\:#
+font-family = RobotoMono Nerd Font Mono
+font-family = RobotoMono Nerd Font
+font-family = Monaco
+font-family = monospaced
+
+shell-integration-features = no-cursor
+theme = GitHub Dark Default
+cursor-style = block
+cursor-color = #FFFFFF
+cursor-opacity = 0.4
+background-opacity = 0.95
+
+keybind = cmd+t=unbind
+
+macos-icon = glass
+
+macos-option-as-alt = true
