@@ -92,6 +92,7 @@ if [ "$quiet" == "false" ]; then
     for opener in "${OPENERS[@]}"; do
         if command -v "$opener" &>/dev/null; then
             exec $opener $url
+            exit 0
         fi
     done
 
