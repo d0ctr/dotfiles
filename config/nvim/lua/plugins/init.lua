@@ -1,10 +1,6 @@
 return {
     -- https://github.com/ofirgall/open.nvim
     { 'ofirgall/open.nvim', dependencies = 'nvim-lua/plenary.nvim' },
-    -- https://github.com/windwp/nvim-autopairs
-    { 'windwp/nvim-autopairs', event = "InsertEnter", config = true },
-    -- https://github.com/ray-x/lsp_signature.nvim
-    { 'ray-x/lsp_signature.nvim', event = 'InsertEnter', config = true },
     -- https://github.com/NMAC427/guess-indent.nvim
     { 'nmac427/guess-indent.nvim', config = true },
     -- https://github.com/Pocco81/auto-save.nvim
@@ -59,6 +55,26 @@ return {
                 vim.g.rust_clip_command = 'xclip -selection clipboard'
             end
         end,
+    },
+
+    -- https://github.com/kdheepak/lazygit.nvim
+    {
+        "kdheepak/lazygit.nvim",
+        -- lazy = true,
+        -- cmd = {
+        --     "LazyGit",
+        --     "LazyGitConfig",
+        --     "LazyGitCurrentFile",
+        --     "LazyGitFilter",
+        --     "LazyGitFilterCurrentFile",
+        -- },
+        -- optional for floating window border decoration
+        dependencies = { "nvim-lua/plenary.nvim" },
+        -- setting the keybinding for LazyGit with 'keys' is recommended in
+        -- order to load the plugin when the command is run for the first time
+        keys = {
+            { "<leader>lg", "<cmd>LazyGit<cr>", desc = "LazyGit" }
+        }
     }
 }
 

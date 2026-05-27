@@ -6,6 +6,8 @@ vim.g.maplocalleader = "\\"
 
 require('config.lazy')
 
+vim.cmd.colorscheme 'catppuccin'
+
 -- configure indent
 vim.opt.expandtab = true
 vim.opt.shiftwidth = 4

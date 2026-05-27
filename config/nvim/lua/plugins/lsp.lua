@@ -1,5 +1,6 @@
 return {
 
+    -- 
     { 'neovim/nvim-lspconfig' },
     -- https://github.com/mason-org/mason-lspconfig.nvim
     {
@@ -24,11 +25,18 @@ return {
             local auto_select = true
 
             local sources = cmp.config.sources({
+                { name = "nvim_lsp_signature_help" },
                 { name = "nvim_lsp" },
                 { name = "path" },
             }, {
                 { name = "buffer" },
             })
+
+            local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+            cmp.event:on(
+                'confirm_done',
+                cmp_autopairs.on_confirm_done()
+            )
 
             return {
                 auto_brackets = {}, -- configure any filetype to auto add brackets
@@ -71,9 +79,23 @@ return {
                 },
                 dependencies = { "rafamadriz/friendly-snippets" },
             },
+            {
+                'windwp/nvim-autopairs',
+                event = "InsertEnter",
+                config = true
+            },
+            { 'hrsh7th/cmp-nvim-lsp-signature-help' },
             -- Maybe? nonnative snippets enginges
             -- { 'hrsh7th/cmp-vsnip' },
             -- { 'hrsh7th/vim-vsnip' },
         },
     },
+    -- -- https://github.com/ray-x/lsp_signature.nvim
+    -- { 
+        -- 'ray-x/lsp_signature.nvim', 
+        -- event = 'InsertEnter', 
+        -- opts = {
+            -- bind = true,
+        -- }
+    -- },
 }
