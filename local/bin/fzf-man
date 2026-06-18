@@ -123,6 +123,8 @@ main() {
                 entry={};
                 name=\$(echo \"\$entry\" | sed 's/([^)]*)$//');
                 section=\$(echo \"\$entry\" | ${grep_cmd} -oe '\([^)]+\)\$' | tr -d '()');
+                PAGER=
+                MANPAGER=
                 if [[ -n \"\$section\" ]]; then
                     man \"\$section\" \"\$name\" 2>/dev/null | col -bx | head -80 || echo '(no preview)';
                 else
