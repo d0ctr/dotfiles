@@ -10,15 +10,20 @@ return {
     --     end
     -- },
     {
-		"catppuccin/nvim",
-		name = "catppuccin",
-		opts = {
-			auto_integrations = true,
-			flavour = "mocha",
-			transparent_background = true,
-			float = {
-				transparent = true,
-			},
-		},
+	"catppuccin/nvim",
+	name = "catppuccin",
+	opts = {
+	    auto_integrations = true,
+	    flavour = "mocha",
+	    transparent_background = true,
+	    float = {
+	        transparent = true,
+	    },
+	    custom_highlights = function(colors)
+		return {
+		    netrwMarkFile = { bg = colors.surface1, style = { "bold" } },
+		}
+	    end,
 	}
+    }
 }

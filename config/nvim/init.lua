@@ -41,6 +41,7 @@ function _G.title()
     end
 end
 vim.opt.titlestring = "%{%v:lua.title()%}"
+vim.g.netrw_liststyle = 3
 
 require('config.keymap')
 require('config.terminal')

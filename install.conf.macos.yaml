@@ -10,6 +10,7 @@
     ~/.config/nvim:     config/nvim
     ~/.config/skhd:     config/skhd
     ~/.config/ghostty:  config/ghostty
+    ~/.config/kitty:    config/kitty
     ~/.local/bin/:
       create: true
       glob: true

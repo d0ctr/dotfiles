@@ -11,7 +11,8 @@ vim.keymap.set('n', '<leader>of', function()
     vim.cmd(':Ex')
 end, { desc = 'netrw' })
 
-vim.keymap.set('x', '<leader>y', '"+y', { desc = 'Copy to system clipboard [+]' })
+vim.keymap.set('', '<leader>y', '"+y', { desc = 'Copy to system clipboard [+]' })
+vim.keymap.set('', '<leader>p', '"+p', { desc = 'Paste from system clipboard [+]' })
 
 vim.keymap.set('n', '<leader>qa', function()
     vim.cmd(':confirm quitall')
