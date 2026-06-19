@@ -25,11 +25,14 @@ vim.api.nvim_create_autocmd({ "BufEnter", "TermOpen" }, {
 
 vim.keymap.set('t', '<Esc>', function()
   if vim.api.nvim_win_get_var(0, 'type') == 'terminal' then
-    vim.cmd('stopinsert')
-    vim.cmd('wincmd p')
+    -- vim.cmd('stopinsert')
+    -- vim.api.nvim_cmd({ cmd = 'wincmd', args = { 'p' } }, {})
+    return '<C-\\><C-n><C-w>p'
+  else
+    return '<Esc>'
   end
 
-end, { desc = 'Escape terminal' })
+end, { desc = 'Escape terminal', expr = true })
 
 local new_terminal = function ()
       local height = vim.api.nvim_win_get_height(0)
